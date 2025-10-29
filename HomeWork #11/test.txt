@@ -1,0 +1,7 @@
+Name: Alex
+Last name: Todua
+DoB: 16 march 1991
+Age: 34
+Gender: Male
+Occupation: Service center manager
+Languages: English, Russian, Georgian

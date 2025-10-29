@@ -1,0 +1,16 @@
+name = input("Dear customer, please tell me what is your name?:")
+print("Hello", name , "Now we will try to find out the hypotenuse length of right triangle and also calculate it's area.")
+print()
+print("Just follow instructions")
+print()
+print("First input right trianlge's legs lenght")
+import math
+
+leg1=int(input("Enter first number:"))
+leg2=int(input("Enter second number:"))
+hypotenuse=int(round(math.sqrt(leg1**2+leg2**2)))
+print("hypotenuse=",hypotenuse)
+print("Great we've just got hupotenuse")
+print("Now let's calculate the area value")
+print((leg1*leg2)//2)
+print("Here we go")
