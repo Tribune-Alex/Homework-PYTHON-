@@ -1,4 +1,4 @@
-import random
+
 
 class Student:
     status = True
