@@ -61,7 +61,7 @@ player8=team.adding('Marquinhos','Defender',5,31,'Brazilian')
 player9=team.adding('Ilia Zabarnyi','Defender',6,23,'Ukrainian')
 player10=team.adding('Lee Kang-in','Midfielder',19,24,'Korean')
 player11=team.adding('Lucas Chevalier','Goalkeeper',30,23,'French')
-player12=team.adding('Bradley Barcola','Forward',29,23,'Spanish')
+player12=team.adding('Bradley Barcola','Forward',29,23,'French')
 
 print(team.players)
 
