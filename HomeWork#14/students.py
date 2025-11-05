@@ -31,11 +31,11 @@ class Student:
         
         if self.calculate_average()>90:
             return f"Excelent"
-        elif self.calculate_average() > 70 and self.calculate_average() < 90:
+        elif self.calculate_average() > 70 and self.calculate_average() < 90 or self.calculate_average() == 90:
             return f"Good"
-        elif self.calculate_average() > 50 and self.calculate_average() < 70:
+        elif self.calculate_average() > 50 and self.calculate_average() < 70 or self.calculate_average() == 70:
             return f"Average"
-        elif self.calculate_average() < 50:
+        elif self.calculate_average() < 50 or self.calculate_average() == 50:
             return f"Poor  Unfortunately, your status is {Student.status==False}"
 
     
@@ -48,6 +48,7 @@ student3=Student(first_name="Ana", last_name="De Armas",age=17,grade=[100,90,96,
 student4=Student(first_name="Joe", last_name="Doe",age=19,grade=[41,45,46,45,35])
 student5=Student(first_name="Dakota", last_name="Johnson",age=16,grade=[50,65,56,45,55])
 student6=Student(first_name="William", last_name="Baldwin",age=25,grade=[77,68,59,85,65])
+student7=Student(first_name="Samuel", last_name="Jackson",age=54,grade=[54,25,58,95,100])
 
 print(f"Student's full name: {student1.get_full_name()}")
 print(f"Cost of training: {student1.get_discount()}")
@@ -86,4 +87,10 @@ print()
 print(f"Student's full name: {student6.get_full_name()}")
 print(f"Cost of training: {student6.get_discount()}")
 print(f"Your grade point average is: {student6.calculate_average()} {student6.get_status()}")
+
+print()
+
+print(f"Student's full name: {student7.get_full_name()}")
+print(f"Cost of training: {student7.get_discount()}")
+print(f"Your grade point average is: {student7.calculate_average()} {student7.get_status()}")
 
