@@ -46,6 +46,8 @@ class FootballTeam:
         for k in self.players:
             if k["Number"]== number:
                 return f"Name:{k['Name']}\nPosition:{k["Position"]}\nAge:{k["Age"]}\nNationality:{k["Nationality"]}"
+            else:
+                print("There is no player by that number")
    
 
     
