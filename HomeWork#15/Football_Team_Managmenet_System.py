@@ -26,8 +26,7 @@ class FootballTeam:
         for i in self.players:
             if i["Number"] == num:
                 self.players.remove(i)
-            else:
-                print("There is no player by that number")
+
         return self.players
     
     def update(self,number,key,value):
