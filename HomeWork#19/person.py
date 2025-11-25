@@ -13,7 +13,7 @@ def new_customer(n):
 
     for i in range(n):
         name = input("Input your name: ").lower()
-        age = int(input("Inout your age: "))
+        age = int(input("Input your age: "))
 
         new_person = {
             "id": last_id + 1,
