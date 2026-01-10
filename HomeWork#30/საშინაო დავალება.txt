@@ -1,0 +1,89 @@
+CREATE TABLE concerns(
+	conc_id SERIAL PRIMARY KEY,
+	group_name VARCHAR(30)
+	
+);
+
+CREATE TABLE makes(
+	m_id SERIAL PRIMARY KEY,
+	make VARCHAR(30),
+	model VARCHAR(30),
+	price INT check(price > 0),
+	conc_id INT REFERENCES concerns(conc_id) ON DELETE CASCADE 
+);
+
+CREATE VIEW all_data AS SELECT * FROM concerns;
+CREATE VIEW all_data_make AS SELECT * FROM makes;
+CREATE VIEW combined_data AS SELECT c.conc_id, c.group_name, m.m_id, m.make, m.model, m.price FROM concerns c JOIN makes m ON c.conc_id = m.conc_id;
+
+INSERT INTO concerns(group_name)VALUES
+	('BMW Group'),
+	('Volkswagen Group'),
+	('General Motors'),
+	('Tata Motors');
+
+INSERT INTO makes(make,model,price,conc_id)VALUES
+('BMW','M5',105000,1),
+('Mini','Cooper',55000,1),
+('Rolls-Royce','Silver Ghost',1000000,1),
+('VW','PASSAT GLI',55000,2),
+('Audi','RS6',250000,2),
+('Porsche','Panamera',95000,2),
+('Bentley','Continental',200000,2),
+('Lamborghini','Urus',250000,2),
+('Bugatti','Chiron',2500000,2),
+('Chevrolet','Camaro',75000,3),
+('GMC','Sierra HD',51000,3),
+('Cadillac','Escalade',105000,3),
+('Jaguar','I-PACE',72500,4),
+('Land Rover','RANGE ROVER SPORT',150000,4);
+
+SELECT * FROM all_data;
+SELECT * FROM all_data_make;
+SELECT * FROM combined_data;
+
+CREATE OR REPLACE VIEW all_data_make AS SELECT m_id,make,model,price,conc_id FROM makes WHERE price > 100000;
+CREATE OR REPLACE VIEW all_data AS SELECT c.conc_id, c.group_name, m.make, m.model, m.price FROM concerns c JOIN makes m ON c.conc_id = m.conc_id;
+SELECT * FROM all_data_make;
+SELECT * FROM all_data;
+
+DROP VIEW all_data, all_data_make, combined_data;
+
+CREATE PROCEDURE delete_concern(c_id INT)
+LANGUAGE plpgsql AS
+$$
+BEGIN
+	DELETE FROM concerns WHERE conc_id=c_id;
+END
+$$
+
+CALL delete_concern(4);
+
+CREATE PROCEDURE update_price(p_id INT, num INT)
+LANGUAGE plpgsql AS
+$$
+BEGIN
+	UPDATE makes SET price = price + num WHERE m_id = p_id;
+END
+$$
+
+CALL update_price(3,4500000);
+
+ALTER TABLE makes ADD COLUMN update_time DATE DEFAULT CURRENT_TIMESTAMP;
+
+CREATE OR REPLACE FUNCTION set_update_time()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.update_time := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_set_update_time
+BEFORE UPDATE ON makes
+FOR EACH ROW
+EXECUTE FUNCTION set_update_time();
+
+UPDATE makes SET price = 450000 WHERE m_id =5;

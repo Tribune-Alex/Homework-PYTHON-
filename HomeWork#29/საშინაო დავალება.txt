@@ -1,0 +1,82 @@
+CREATE TABLE categories (
+    cat_id SERIAL PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE products_one (
+    pr_id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    price NUMERIC,
+    category_id INT REFERENCES categories(cat_id)
+);
+
+CREATE TABLE orders_one (
+    or_id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products_one(pr_id),
+    quantity INT
+);
+
+INSERT INTO categories(name)VALUES
+	('Apple'),
+	('XIAOMI'),
+	('Samsung'),
+	('Iqos'),
+	('BMW'),
+	('Mercedes-Benz'),
+	('Volkswagen');
+
+INSERT INTO products_one(name,price,category_id)VALUES
+	('Iphone 16 PRO MAX',1500,1),
+	('Iphone 16 PRO',1200,1),
+	('Iphone 16',1000,1),
+	('Iphone 17 PRO MAX',2500,1),
+	('Iphone 17 PRO',2200,1),
+	('Iphone 17',2000,1),
+	('POCO F7 PRO',950,2),
+	('POCO F7',850,2),
+	('POCO M6',750,2),
+	('POCO M3',650,2),
+	('S24 ULTRA',1950,3),
+	('A52',550,3),
+	('A32',350,3),
+	('S24',1750,3),
+	('Iluma I PRIME',100,4),
+	('Iluma I',80,4),
+	('Iluma I ONE',60,4),
+	('M5',100000,5),
+	('X5 M',150000,5),
+	('X6 M',175000,5),
+	('M4',95000,5),
+	('X7 APLINA',195000,5),
+	('G63 AMG BRABUS',250000,6),
+	('S63 AMG',220000,6),
+	('E63 AMG',175000,6),
+	('Passat GLI',55000,7),
+	('Jetta GLI',45000,7),
+	('Touareg V10 5.0 TDI',65000,7);
+
+INSERT INTO orders_one(product_id,quantity)VALUES
+	(1,5),
+	(2,10),
+	(3,2),
+	(4,6),
+	(5,7),
+	(6,1),
+	(28,2),
+	(15,3),
+	(11,7),
+	(17,9),
+	(10,1),
+	(25,5),
+	(13,4),
+	(9,NULL);
+
+SELECT * FROM products_one WHERE price > (SELECT AVG(price) FROM products_one);
+SELECT * FROM products_one WHERE category_id = (SELECT category_id FROM products_one WHERE price =(SELECT MAX(price) FROM products_one));
+SELECT * FROM products_one po WHERE EXISTS(SELECT * FROM orders_one o WHERE po.pr_id = o.product_id);
+SELECT * FROM products_one po WHERE NOT EXISTS(SELECT * FROM orders_one o WHERE po.pr_id = o.product_id);
+SELECT * FROM categories WHERE EXISTS(SELECT category_id FROM products_one GROUP BY category_id HAVING COUNT(*)>1);
+SELECT * FROM products_one WHERE price > ANY (SELECT price FROM products_one WHERE category_id = 1);
+SELECT * FROM products_one WHERE price > ALL (SELECT price FROM products_one WHERE category_id = 2);
+SELECT * FROM categories c WHERE EXISTS(SELECT 1 FROM products_one po WHERE po.category_id=c.cat_id AND po.price > 500);
+	

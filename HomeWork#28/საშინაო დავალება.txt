@@ -1,0 +1,99 @@
+CREATE TABLE customers(
+	customer_ID SERIAL PRIMARY KEY,
+	first_name VARCHAR(20),
+	email VARCHAR(30) UNIQUE
+);
+
+CREATE TABLE customer_profiles(
+	phone INT,
+	adress VARCHAR,
+	cp_ID INT UNIQUE REFERENCES customers(customer_ID) ON DELETE CASCADE
+);
+
+INSERT INTO customers(first_name, email) VALUES 
+	('John','john@gmail.com'),
+	('Alex','alex@gmail.com'),
+	('James','james@gmail.com'),
+	('William','william@gmail.com'),
+	('Ana','ana@gmail.com'),
+	('Kate','kate@gmail.com');
+
+INSERT INTO customer_profiles(phone,adress,cp_ID) VALUES
+	(577959595,'Guramishvili avenue',1),
+	(555050505,'Rustaveli 1',2),
+	(579454545,'Baker street',3),
+	(595121212,'Nevada avenue',4),
+	(577888888,'Danzel street',5),
+	(551515151,'Vake',6);
+
+SELECT first_name,email,phone,adress FROM customer_profiles JOIN customers 
+ON customer_profiles.cp_ID = customers.customer_ID
+
+
+CREATE TABLE suppliers(
+	supp_ID SERIAL PRIMARY KEY,
+	name_ VARCHAR(30),
+	email VARCHAR(40) UNIQUE
+);
+
+CREATE TABLE products(
+	pr_ID SERIAL PRIMARY KEY,
+	title VARCHAR(35),
+	price INT check(price > 0),
+	supplier INT REFERENCES suppliers(supp_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE orders (
+    	order_ID SERIAL PRIMARY KEY,
+  	order_date DATE NOT NULL DEFAULT CURRENT_DATE,
+   	customer_ID INT REFERENCES customers(customer_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE product_order(
+    	order_ID INT REFERENCES orders(order_ID) PRIMARY KEY ON DELETE CASCADE,
+    	product_ID INT REFERENCES products(pr_ID) PRIMARY KEY ON DELETE CASCADE,
+    	quantity INT NOT NULL CHECK (quantity > 0)
+);
+
+INSERT INTO suppliers(name_,email) VALUES
+('Apple','apple@icloud.com'),
+('Samsung','samsung@gmail.com'),
+('XIAOMI','xiaomi@china.ch'),
+('NOKIA','nokia@finland.com'),
+('BMW Group', 'bmw@gmail.com');
+
+INSERT INTO products(title,price,supplier) VALUES
+	('Iphone 16 PRO MAX',2000,1),
+	('Iphone 17',3000,1),
+	('MacBook',2500,1),
+	('AirPad',500,1),
+	('Apple Watch',700,1),
+	('A52',450,2),
+	('S24 ULTRA',1000,2),
+	('A72',550,2),
+	('Galaxy 9 TAB',1200,2),
+	('X6 PRO',700,3),
+	('M6',600,3),
+	('F7 PRO',850,3),
+	('Nokia 7610',125,4),
+	('Nokia N95',450,4),
+	('Nokia N95 8GB',700,4),
+	('Water Pump',700,5),
+	('Thermostat',500,5),
+	('Radiator',650,5),
+	('Crankshaft sensor',150,5);
+
+INSERT INTO product_order(order_ID,prod_ID,quantity) VALUES
+	(1, 1, 2),
+	(3, 17, 4),
+	(5, 10, 10),
+	(6, 9, 1),
+	(1, 13, 5),
+	(2, 2, 1),
+	(3, 15, 3),
+	(4, 13, 2),
+	(1, 1, 1);
+
+SELECT c.name AS customer_name, o.order_id, o.order_date, p.title AS product, po.quantity, p.price, (po.quantity * p.price) AS total_price
+FROM product_order po JOIN orders o ON po.order_id = o.order_ID JOIN customers c ON o.customer_ID = c.customer_ID
+JOIN products p ON po.product_ID = p.product_ID ORDER BY o.order_ID;

@@ -1,0 +1,139 @@
+CREATE TABLE hotels(
+	Hotel_ID SERIAL PRIMARY KEY,
+	Hotel_Name VARCHAR(40) NOT NULL,
+	City VARCHAR(20) NOT NULL,
+	Hotel_Star INT NOT NULL check(Hotel_Star BETWEEN 1 and 5)
+);
+
+
+CREATE TABLE rooms(
+	room_ID SERIAL PRIMARY KEY,
+	hotel_ID INT NOT NULL,
+	Room_Number INT NOT NULL UNIQUE,
+	Room_Floor INT NOT NULL,
+	Price INT check(Price > 0),
+	FOREIGN KEY (hotel_ID) REFERENCES hotels(Hotel_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE guests(
+	guest_ID SERIAL PRIMARY KEY,
+	room_ID INT NOT NULL,
+	First_Name VARCHAR(30) NOT NULL,
+	Last_Name VARCHAR(30) NOT NULL,
+	Phone INT NOT NULL UNIQUE,
+	FOREIGN KEY (room_ID) REFERENCES rooms(room_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE services(
+	service_ID SERIAL PRIMARY KEY,
+	room_ID INT NOT NULL,
+	service VARCHAR(50) NOT NULL UNIQUE,
+	Price INT check(Price > 0),
+	FOREIGN KEY (room_ID) REFERENCES rooms(room_ID) ON DELETE CASCADE
+);
+
+INSERT INTO hotels(Hotel_Name,City,Hotel_Star)VALUES
+('Continental','New-York',5),
+('Radisson','Montreal',5),
+('Imperial','Tbilisi',5),
+('House','Berlin',4),
+('Sheraton','Batumi',5),
+('Grand','Washington',3),
+('Gold Palace','Las Vegas',5),
+('Geko','Gori',2),
+('Qwerty','Kutaisi',1);
+
+
+
+INSERT INTO rooms(Room_Number,Room_Floor,Price,hotel_ID)VALUES
+(101,2,250,9),
+(102,2,250,8),
+(103,2,250,9),
+(104,2,250,6),
+(105,2,250,5),
+(106,2,250,6),
+(107,2,250,4),
+(108,2,250,9),
+(109,2,250,1),
+(110,2,250,2),
+(201,3,500,2),
+(202,3,500,3),
+(203,3,500,1),
+(204,3,500,3),
+(205,3,500,1),
+(206,3,500,2),
+(207,3,500,8),
+(208,3,500,7),
+(209,3,500,6),
+(210,3,500,4),
+(301,4,750,3),
+(302,4,750,5),
+(303,4,750,2),
+(304,4,750,1),
+(305,4,750,3),
+(306,4,750,4),
+(307,4,750,5),
+(308,4,750,5),
+(309,4,750,5),
+(310,4,750,5),
+(401,5,1000,2),
+(402,5,1000,1),
+(403,5,1000,2),
+(404,5,1000,3),
+(405,5,1000,3),
+(406,5,1000,2),
+(407,5,1000,1),
+(408,5,1000,2),
+(409,5,1000,1),
+(410,5,1000,1);
+
+
+
+INSERT INTO guests(First_Name,Last_Name,Phone,room_ID)VALUES
+('John','Wick',599999999,3),
+('Carol','Shelby',577777777,2),
+('Ken','Miles',555555555,35),
+('Arnold','Schwarzenegger',544444444,17),
+('Charlie','Sheen',511111111,25),
+('Johny','Depp',588888888,6),
+('Ana','De Armas',533333333,7),
+('Dakota','Johnson',555000000,7),
+('Kate','Beckinsale',555898989,5),
+('Vin','Diesel',555747747,40),
+('Jordan','Brewster',515656565,39),
+('Brie','Larson',512345678,33);
+
+INSERT INTO services(service,Price,room_ID)VALUES
+('Minibar',100,35),
+('High Speed WI-FI',150,35),
+('Hairdryers',75,5),
+('Ergonomic Seating',200,25),
+('Makeup Kits',175,7),
+('In-room safe',300,2),
+('Guns and Knifes',10000,3),
+('Access to gym',150,40),
+('Wake-Up calls',50,17),
+('VIP Massage',500,6),
+('Pool',400,39),
+('Bodyguard',1500,25);
+
+SELECT r.Room_Number, h.Hotel_Name FROM rooms r JOIN 
+hotels h ON r.hotel_ID = h.Hotel_ID;
+
+
+SELECT First_Name, Last_Name, r.Room_Number, h.Hotel_Name FROM guests g JOIN rooms r ON g.room_ID = r.room_ID
+JOIN hotels h ON r.hotel_ID = h.Hotel_ID;
+
+SELECT g.First_Name, g.Last_Name FROM guests g JOIN rooms r ON g.room_ID = r.room_ID JOIN hotels h
+ON r.hotel_ID = h.Hotel_ID WHERE h.Hotel_Name = 'Continental';
+
+SELECT h.Hotel_Name, COUNT(r.room_ID) AS room_count FROM hotels h LEFT JOIN rooms r
+ON h.Hotel_ID = r.hotel_ID GROUP BY h.Hotel_ID;
+
+SELECT r.Room_Number, h.Hotel_Name FROM rooms r JOIN hotels h ON r.hotel_ID = h.Hotel_ID LEFT JOIN services s 
+ON r.room_ID = s.room_ID WHERE s.service_ID IS NULL;
+
+DELETE FROM rooms WHERE room_ID = 2;
+
+UPDATE rooms SET Price = 2000 WHERE room_ID = 39;
+UPDATE guests SET room_ID = 35 WHERE guest_ID = 1;
