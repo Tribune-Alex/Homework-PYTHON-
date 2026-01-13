@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIES</title>
+</head>
+<body>
+    <h1>There are {{total}} movies in list</h1>
+     <table>
+        <thead>
+           <tr>
+               <th>დასახელება</th>
+               <th>გამოშვების წელი</th>
+               <th>ჟანრი</th>
+               <th>ხანგრძლივობა</th>
+               <th>რეიტინგი</th>
+           </tr>
+           </thead>
+
+    {% for movie in media %}
+   
+          
+        <tr class="
+    {% if movie.rating >= 9 %}
+        green
+    {% elif movie.rating >= 8.5 %}
+        orange
+    {% else %}
+        gray
+    {% endif %}
+        ">
+            <td>{{ movie.title }}</td>
+            <td>{{movie.year}}</td>
+            <td>{{movie.genre}}</td>
+            <td>{{movie.duration}}</td>
+            <td>{{ movie.rating }}</td>
+        </tr>
+         
+    
+    
+    {% endfor %}
+    <tfoot>
+        <tr>
+               <th>დასახელება</th>
+               <th>გამოშვების წელი</th>
+               <th>ჟანრი</th>
+               <th>ხანგრძლივობა</th>
+               <th>რეიტინგი</th>
+           </tr>
+    </tfoot>
+    </table>
+
+    <h1>Average time of movies in list is {{avg_duration}} minutes</h1>
+
+    <style>
+    .green {
+        color: green;
+        font-weight: bold;
+    }
+
+    .orange {
+        color: orange;
+    }
+
+    .gray {
+        color: gray;
+    }
+
+    table{
+        border: 5px solid blueviolet;
+        text-align: center;
+        padding-top: 5px;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px; 
+        border: 2px solid blueviolet;
+    }
+</style>
+</body>
+</html>
